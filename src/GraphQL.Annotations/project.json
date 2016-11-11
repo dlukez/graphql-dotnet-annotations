@@ -1,0 +1,16 @@
+{
+  "name": "GraphQL.Annotations",
+  "version": "0.0.0-*",
+
+  "dependencies": {
+    "GraphQL": "0.13.0.562",
+    "NETStandard.Library": "1.1.0",
+    "System.ComponentModel.TypeConverter": "4.1.0"
+  },
+
+  "frameworks": {
+    "netstandard1.1": {
+      "imports": "dnxcore50"
+    }
+  }
+}

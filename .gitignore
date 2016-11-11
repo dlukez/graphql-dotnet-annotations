@@ -1,0 +1,17 @@
+# User-specific files
+*.suo
+*.user
+
+# Build files
+[Bb]in/
+[Oo]bj/
+
+# Project files
+.vs/
+.vscode/
+project.lock.json
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+.idea/
+*.sln.iml
