@@ -1,19 +1,15 @@
 {
   "version": "0.0.0-*",
   "dependencies": {
-    "GraphQL": "0.13.0.562",
-    "System.ComponentModel.TypeConverter": "4.1.0"
+    "GraphQL": "0.13.0.562"
   },
   "frameworks": {
     "netstandard1.1": {
       "dependencies": {
-        "NETStandard.Library": "1.6.0"
+        "NETStandard.Library": "1.6.0",
+        "System.ComponentModel.TypeConverter": "4.1.0"
       },
-      "imports": [
-        "dnxcore50",
-        "portable-net45+win8"
-      ]
-    },
-    "net45":  {} 
+      "imports": "dnxcore50"
+    }
   }
 }
