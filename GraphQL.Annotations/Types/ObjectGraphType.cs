@@ -6,7 +6,7 @@ using GraphQL.Annotations.Attributes;
 
 namespace GraphQL.Annotations.Types
 {
-    public class ObjectGraphType<TModelType> : global::GraphQL.Types.ObjectGraphType<TModelType>
+    public class ObjectGraphType<TModelType> : GraphQL.Types.ObjectGraphType<TModelType>
         where TModelType : class
     {
         public ObjectGraphType(params object[] injectedParameters)
@@ -23,15 +23,13 @@ namespace GraphQL.Annotations.Types
             var baseTypes = GetBaseTypes(type).Where(t => t.GetTypeInfo().IsAbstract);
             var interfaces = type.GetInterfaces();
             var implementedInterfaces = baseTypes.Concat(interfaces);
-            var genericInterfaceType = typeof(InterfaceGraphType<>);
             foreach (var implementedInterface in implementedInterfaces)
             {
                 var interfaceAttr = implementedInterface.GetTypeInfo().GetCustomAttribute<GraphQLInterfaceAttribute>(false);
                 if (interfaceAttr == null)
                     continue;
 
-                // Call Interface(typeof(InterfaceGraphType<Interface>));
-                Interface(genericInterfaceType.MakeGenericType(implementedInterface));
+                Interface(implementedInterface.ToGraphType());
             }
         }
 

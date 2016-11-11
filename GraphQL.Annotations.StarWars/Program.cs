@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using GraphQL.Annotations.StarWars;
 using GraphQL.Annotations.Types;
+using System.Linq;
+using GraphQL.Http;
 
 namespace GraphQL.Annotations.StarWarsApp
 {
@@ -11,9 +12,10 @@ namespace GraphQL.Annotations.StarWarsApp
         {
             InitTestData();
             RunQuery();
+            Console.ReadKey();
         }
 
-        private static ExecutionResult RunQuery()
+        private static void RunQuery()
         {
             var query = @" {
                 droids {
@@ -49,10 +51,15 @@ namespace GraphQL.Annotations.StarWarsApp
                 }
             }";
 
-            var schema = new Schema<RootQuery>();
-            var executer = new DocumentExecuter();
-
-            return executer.ExecuteAsync(schema, null, query, null).Result;
+            using (var db = new StarWarsContext())
+            {
+                var schema = new Schema<RootQuery>();
+                var executer = new DocumentExecuter();
+                var writer = new DocumentWriter(true);
+                var result = executer.ExecuteAsync(schema, db, query, null).Result;
+                var output = writer.Write(result);
+                Console.WriteLine(output);
+            }
         }
 
         private static void InitTestData()

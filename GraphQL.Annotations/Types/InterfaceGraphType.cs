@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace GraphQL.Annotations.Types
 {
-    public class InterfaceGraphType<TModelType> : global::GraphQL.Types.InterfaceGraphType<TModelType>
+    public class InterfaceGraphType<TModelType> : GraphQL.Types.InterfaceGraphType<TModelType>
     {
         public InterfaceGraphType(params object[] injectedParameters)
         {

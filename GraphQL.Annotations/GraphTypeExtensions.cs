@@ -87,7 +87,7 @@ namespace GraphQL.Annotations
                     Name = funcAttr.Name ?? method.Name.FirstCharacterToLower(),
                     Description = funcAttr.Description,
                     Arguments = new QueryArguments(parameterArgumentMappings.Values),
-                    Resolver = shouldResolve ? new MethodResolver<TModelType>(method, injectedParameters, parameterArgumentMappings) : null
+                    Resolver = shouldResolve ? new MethodResolver(method, injectedParameters, parameterArgumentMappings) : null
                 });
             }
         }

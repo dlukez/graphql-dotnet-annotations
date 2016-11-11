@@ -6,6 +6,14 @@ using GraphQL.Types;
 
 namespace GraphQL.Annotations
 {
+    public class MethodResolver : MethodResolver<object>
+    {
+        public MethodResolver(MethodInfo methodInfo, object[] injectedParameters, Dictionary<ParameterInfo, QueryArgument> argumentMap)
+            : base(methodInfo, injectedParameters, argumentMap)
+        {
+        }
+    }
+
     public class MethodResolver<TSource> : IFieldResolver<TSource>
     {
         private readonly MethodInfo m_MethodInfo;

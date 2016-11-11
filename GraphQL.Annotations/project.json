@@ -1,7 +1,7 @@
 {
   "version": "0.0.0-*",
   "dependencies": {
-    "GraphQL": "0.13.0.562"
+    "GraphQL": "0.13.0.592"
   },
   "frameworks": {
     "netstandard1.1": {
