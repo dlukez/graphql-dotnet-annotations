@@ -15,8 +15,8 @@ namespace GraphQL.Annotations
 
         public MethodResolver(MethodInfo methodInfo, object[] injectedParameters, Dictionary<ParameterInfo, QueryArgument> argumentMap)
         {
-            
             m_MethodInfo = methodInfo;
+            m_InjectedParameters = injectedParameters;
             //var methodParams = methodInfo.GetParameters();
             //var parameterExpressions = methodParams.Select(p => Expression.Parameter(p.ParameterType, p.Name));
             //m_MethodExpression = methodInfo.IsStatic
