@@ -1,17 +1,13 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-using GraphQL.Annotations.StarWars;
 
-namespace GraphQL.Annotations.StarWars.Migrations
+namespace GraphQL.Annotations.StarWarsApp.Migrations
 {
     [DbContext(typeof(StarWarsContext))]
-    [Migration("20161111024839_Initial")]
-    partial class Initial
+    partial class StarWarsContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1");

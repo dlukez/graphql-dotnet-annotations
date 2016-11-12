@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using GraphQL.Annotations.StarWars.Model;
+using GraphQL.Annotations.StarWarsApp.Model;
 using GraphQL.Annotations.Types;
 using GraphQL.Http;
 
-namespace GraphQL.Annotations.StarWars
+namespace GraphQL.Annotations.StarWarsApp
 {
     public class Program
     {

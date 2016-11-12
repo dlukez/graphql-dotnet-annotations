@@ -1,6 +1,6 @@
 ﻿using GraphQL.Annotations.Attributes;
 
-namespace GraphQL.Annotations.StarWars.Model
+namespace GraphQL.Annotations.StarWarsApp.Model
 {
     [GraphQLObject]
     public class Friendship

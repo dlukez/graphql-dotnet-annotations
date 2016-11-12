@@ -4,7 +4,7 @@ using System.Linq;
 using GraphQL.Annotations.Attributes;
 using GraphQL.Types;
 
-namespace GraphQL.Annotations.StarWars.Model
+namespace GraphQL.Annotations.StarWarsApp.Model
 {
     [GraphQLObject]
     public class QueryRoot : IDisposable

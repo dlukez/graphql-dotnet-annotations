@@ -2,7 +2,7 @@
 using GraphQL.Annotations.Attributes;
 using GraphQL.Types;
 
-namespace GraphQL.Annotations.StarWars.Model
+namespace GraphQL.Annotations.StarWarsApp.Model
 {
     [GraphQLInterface]
     public interface ICharacter

@@ -1,9 +1,9 @@
 ﻿using GraphQL.Annotations.Attributes;
-using GraphQL.Annotations.StarWars.Model;
+using GraphQL.Annotations.StarWarsApp.Model;
 using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
 
-namespace GraphQL.Annotations.StarWars
+namespace GraphQL.Annotations.StarWarsApp
 {
     [GraphQLObject]
     public class StarWarsContext : DbContext

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GraphQL.Annotations.StarWars.Migrations
+namespace GraphQL.Annotations.StarWarsApp.Migrations
 {
     public partial class Initial : Migration
     {
