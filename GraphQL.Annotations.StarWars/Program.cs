@@ -1,10 +1,10 @@
 ﻿using System;
-using GraphQL.Annotations.StarWars;
-using GraphQL.Annotations.Types;
 using System.Linq;
+using GraphQL.Annotations.StarWars.Model;
+using GraphQL.Annotations.Types;
 using GraphQL.Http;
 
-namespace GraphQL.Annotations.StarWarsApp
+namespace GraphQL.Annotations.StarWars
 {
     public class Program
     {
@@ -12,6 +12,8 @@ namespace GraphQL.Annotations.StarWarsApp
         {
             InitTestData();
             RunQuery();
+            Console.WriteLine();
+            Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
 
@@ -26,40 +28,54 @@ namespace GraphQL.Annotations.StarWarsApp
                         name
                         ... on Human {
                             humanId
-                            homePlanet
-                            friends1 {
-                                friends {
-                                    name
-                                }
-                            }
-                            friends2 {
-                                name
-                                friends {
-                                    friends {
-                                        name
-                                    }
-                                }
-                            }
-                            friends3 {
-                                name
-                            }
-                            friends4 {
-                                name
-                            }
                         }
                     }
                 }
             }";
 
-            using (var db = new StarWarsContext())
+            var executer = new DocumentExecuter();
+            var writer = new DocumentWriter(true);
+            string output1, output2;
+
+            // Example 1 - a QueryRoot.
+            using (var root = new QueryRoot())
+            using (var schema = new Schema<QueryRoot>())
             {
-                var schema = new Schema<RootQuery>();
-                var executer = new DocumentExecuter();
-                var writer = new DocumentWriter(true);
-                var result = executer.ExecuteAsync(schema, db, query, null).Result;
-                var output = writer.Write(result);
-                Console.WriteLine(output);
+                var result = executer.ExecuteAsync(schema, root, query, null).Result;
+                output1 = writer.Write(result);
+                Console.WriteLine("Example 1 output (QueryRoot):");
+                Console.WriteLine("-----------------------------");
+                Console.WriteLine(output1);
+                Console.WriteLine();
             }
+
+            // Example 2 - annotating the context directly
+            // I get the feeling there are reasons why wouldn't
+            // want to do this but for simple scenarios it seems to suffice.
+            using (var db = new StarWarsContext())
+            using (var schema = new Schema<StarWarsContext>())
+            {
+                var result = executer.ExecuteAsync(schema, db, query, null).Result;
+                output2 = writer.Write(result);
+                Console.WriteLine("Example 2 output (StarWarsContext):");
+                Console.WriteLine("-----------------------------------");
+                Console.WriteLine(output2);
+                Console.WriteLine();
+            }
+
+            // Confirm we got the same result, just 'cause...
+            if (output1 == output2)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("✓ Outputs are the same");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("× Outputs are different");
+            }
+
+            Console.ForegroundColor = ConsoleColor.Black;
         }
 
         private static void InitTestData()

@@ -20,17 +20,12 @@ namespace GraphQL.Annotations.Types
         private void ImplementInterfaces()
         {
             var type = typeof (TModelType);
-            var baseTypes = GetBaseTypes(type).Where(t => t.GetTypeInfo().IsAbstract);
+            var abstractBaseTypes = GetBaseTypes(type).Where(t => t.GetTypeInfo().IsAbstract);
             var interfaces = type.GetInterfaces();
-            var implementedInterfaces = baseTypes.Concat(interfaces);
-            foreach (var implementedInterface in implementedInterfaces)
-            {
-                var interfaceAttr = implementedInterface.GetTypeInfo().GetCustomAttribute<GraphQLInterfaceAttribute>(false);
-                if (interfaceAttr == null)
-                    continue;
-
-                Interface(implementedInterface.ToGraphType());
-            }
+            Interfaces =
+                abstractBaseTypes.Concat(interfaces)
+                    .Select(t => t.GraphTypeFromAttribute<GraphQLInterfaceAttribute>())
+                    .Where(t => t != null);
         }
 
         private static IEnumerable<Type> GetBaseTypes(Type type)

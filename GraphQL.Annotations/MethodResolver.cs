@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using GraphQL.Resolvers;
 using GraphQL.Types;
 
@@ -14,37 +15,31 @@ namespace GraphQL.Annotations
         }
     }
 
-    public class MethodResolver<TSource> : IFieldResolver<TSource>
+    public class MethodResolver<TReturn> : IFieldResolver<TReturn>
     {
-        private readonly MethodInfo m_MethodInfo;
-        private readonly object[] m_InjectedParameters;
-        //private readonly MethodCallExpression m_MethodExpression;
-        private readonly Dictionary<ParameterInfo, QueryArgument> m_ArgumentMap;
+        private readonly MethodInfo _methodInfo;
+        private readonly object[] _injectedParameters;
+        private readonly Dictionary<ParameterInfo, QueryArgument> _argumentMap;
 
         public MethodResolver(MethodInfo methodInfo, object[] injectedParameters, Dictionary<ParameterInfo, QueryArgument> argumentMap)
         {
-            m_MethodInfo = methodInfo;
-            m_InjectedParameters = injectedParameters;
-            //var methodParams = methodInfo.GetParameters();
-            //var parameterExpressions = methodParams.Select(p => Expression.Parameter(p.ParameterType, p.Name));
-            //m_MethodExpression = methodInfo.IsStatic
-            //    ? Expression.Call(methodInfo, parameterExpressions)
-            //    : Expression.Call(Expression.Parameter(typeof(TSource)), methodInfo, parameterExpressions);
-            m_ArgumentMap = argumentMap;
+            _methodInfo = methodInfo;
+            _injectedParameters = injectedParameters;
+            _argumentMap = argumentMap;
         }
 
-        private TSource ResolveInternal(ResolveFieldContext context)
+        private TReturn ResolveInternal(ResolveFieldContext context)
         {
-            var arguments = new object[m_InjectedParameters.Length + m_ArgumentMap.Count + 1];
+            var arguments = new object[_injectedParameters.Length + _argumentMap.Count + 1];
 
             // Context is always first argument
-            arguments[0] = new ResolveFieldContext<TSource>(context);
+            arguments[0] = context;
 
             // then injected parameters
-            m_InjectedParameters.CopyTo(arguments, 1);
+            _injectedParameters.CopyTo(arguments, 1);
 
             // then query arguments.
-            foreach (var param in m_ArgumentMap)
+            foreach (var param in _argumentMap)
             {
                 arguments[param.Key.Position] =
                     ConvertArgument(
@@ -52,10 +47,10 @@ namespace GraphQL.Annotations
                         param.Key.ParameterType);
             }
 
-            return (TSource)m_MethodInfo.Invoke(null, arguments);
+            return (TReturn) _methodInfo.Invoke(_methodInfo.IsStatic ? null : context.Source, arguments);
         }
 
-        public TSource Resolve(ResolveFieldContext context)
+        public TReturn Resolve(ResolveFieldContext context)
         {
             return ResolveInternal(context);
         }

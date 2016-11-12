@@ -3,7 +3,7 @@ using System.Linq;
 using GraphQL.Annotations.Attributes;
 using GraphQL.Types;
 
-namespace GraphQL.Annotations.StarWars
+namespace GraphQL.Annotations.StarWars.Model
 {
     [GraphQLObject]
     public class Droid : ICharacter
@@ -20,7 +20,7 @@ namespace GraphQL.Annotations.StarWars
         [GraphQLFunc]
         public IEnumerable<ICharacter> Friends(ResolveFieldContext context)
         {
-            var db = (StarWarsContext) context.RootValue;
+            var db = context.GetDataContext();
             return db.Friendships
                 .Where(f => f.DroidId == ((Droid)context.Source).DroidId)
                 .Select(f => f.Human);

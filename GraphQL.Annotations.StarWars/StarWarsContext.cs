@@ -1,4 +1,5 @@
 ﻿using GraphQL.Annotations.Attributes;
+using GraphQL.Annotations.StarWars.Model;
 using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,9 +24,9 @@ namespace GraphQL.Annotations.StarWars
 
     public static class ContextExtensions
     {
-        public static TDataContext GetDataContext<TDataContext, TGraphType>(this ResolveFieldContext<TGraphType> resolveContext) where TDataContext : DbContext
+        public static StarWarsContext GetDataContext(this ResolveFieldContext context)
         {
-            return resolveContext.RootValue as TDataContext;
+            return context.RootValue as StarWarsContext ?? (context.RootValue as QueryRoot)?.Db;
         }
     }
 }
