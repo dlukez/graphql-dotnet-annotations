@@ -17,12 +17,24 @@ namespace GraphQL.Annotations.StarWarsApp.Model
         [GraphQLField]
         public string HomePlanet { get; set; }
 
+        public List<HumanAppearance> Appearances { get; set; }
+
+        [GraphQLFunc]
+        public IEnumerable<Episode> AppearsIn(ResolveFieldContext context)
+        {
+            var db = context.GetDataContext();
+            var human = this;
+            return db.HumanAppearances
+                    .Where(a => human.HumanId == a.HumanId)
+                    .Select(a => a.Episode);
+        }
+
         [GraphQLFunc]
         public IEnumerable<ICharacter> Friends(ResolveFieldContext context)
         {
             var db = context.GetDataContext();
             return db.Friendships
-                .Where(f => f.HumanId == ((Human)context.Source).HumanId)
+                .Where(f => f.HumanId == HumanId)
                 .Select(f => f.Droid);
         }
 

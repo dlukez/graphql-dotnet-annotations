@@ -15,6 +15,8 @@ namespace GraphQL.Annotations.StarWarsApp
         public DbSet<Droid> Droids { get; set; }
 
         public DbSet<Friendship> Friendships { get; set; }
+        public DbSet<HumanAppearance> HumanAppearances { get; set; }
+        public DbSet<DroidAppearance> DroidAppearances { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

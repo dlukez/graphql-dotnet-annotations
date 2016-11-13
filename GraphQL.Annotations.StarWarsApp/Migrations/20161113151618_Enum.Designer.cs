@@ -8,9 +8,10 @@ using GraphQL.Annotations.StarWarsApp;
 namespace GraphQL.Annotations.StarWarsApp.Migrations
 {
     [DbContext(typeof(StarWarsContext))]
-    partial class StarWarsContextModelSnapshot : ModelSnapshot
+    [Migration("20161113151618_Enum")]
+    partial class Enum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1");

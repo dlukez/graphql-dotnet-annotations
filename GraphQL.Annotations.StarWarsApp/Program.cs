@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GraphQL.Annotations.StarWarsApp.Model;
 using GraphQL.Annotations.Types;
@@ -14,7 +15,8 @@ namespace GraphQL.Annotations.StarWarsApp
             RunQuery();
             Console.WriteLine();
             Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
+            // Console.ReadKey();
+            Console.WriteLine();
         }
 
         private static void RunQuery()
@@ -24,10 +26,12 @@ namespace GraphQL.Annotations.StarWarsApp
                     droidId
                     name
                     primaryFunction
+                    appearsIn
                     friends {
                         name
                         ... on Human {
                             humanId
+                            appearsIn
                         }
                     }
                 }
@@ -37,7 +41,7 @@ namespace GraphQL.Annotations.StarWarsApp
             var writer = new DocumentWriter(true);
             string output1, output2;
 
-            // Example 1 - a QueryRoot.
+            // Example 1 - QueryRoot.
             using (var root = new QueryRoot())
             using (var schema = new Schema<QueryRoot>())
             {
@@ -49,7 +53,7 @@ namespace GraphQL.Annotations.StarWarsApp
                 Console.WriteLine();
             }
 
-            // Example 2 - annotating the context directly
+            // Example 2 - DbContext.
             // I get the feeling there are reasons why wouldn't
             // want to do this but for simple scenarios it seems to suffice.
             using (var db = new StarWarsContext())
@@ -64,6 +68,7 @@ namespace GraphQL.Annotations.StarWarsApp
             }
 
             // Confirm we got the same result, just 'cause...
+            var defaultColor = Console.ForegroundColor;
             if (output1 == output2)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -74,8 +79,7 @@ namespace GraphQL.Annotations.StarWarsApp
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("× Outputs are different");
             }
-
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = defaultColor;
         }
 
         private static void InitTestData()
@@ -85,15 +89,22 @@ namespace GraphQL.Annotations.StarWarsApp
                 if (db.Humans.Any())
                     return;
 
-                db.Humans.RemoveRange(db.Humans);
                 db.Droids.RemoveRange(db.Droids);
+                db.Humans.RemoveRange(db.Humans);
                 db.Friendships.RemoveRange(db.Friendships);
+                db.DroidAppearances.RemoveRange(db.DroidAppearances);
+                db.HumanAppearances.RemoveRange(db.HumanAppearances);
 
                 var luke = new Human
                 {
                     HumanId = 1,
                     Name = "Luke",
-                    HomePlanet = "Tatooine"
+                    HomePlanet = "Tatooine",
+                    Appearances = new List<HumanAppearance>
+                    {
+                        new HumanAppearance { Episode = Episode.EmpireStrikesBack },
+                        new HumanAppearance { Episode = Episode.ANewHope }
+                    }
                 };
 
                 var vader = new Human
@@ -110,6 +121,10 @@ namespace GraphQL.Annotations.StarWarsApp
                     HomePlanet = "Cromwell"
                 };
 
+                db.Humans.Add(luke);
+                db.Humans.Add(vader);
+                db.Humans.Add(ash);
+
                 var r2d2 = new Droid
                 {
                     DroidId = 1,
@@ -121,12 +136,13 @@ namespace GraphQL.Annotations.StarWarsApp
                 {
                     DroidId = 2,
                     Name = "C-3PO",
-                    PrimaryFunction = "Protocol"
+                    PrimaryFunction = "Protocol",
+                    Appearances = new List<DroidAppearance>
+                    {
+                        new DroidAppearance { Episode = Episode.ReturnOfTheJedi }
+                    }
                 };
 
-                db.Humans.Add(luke);
-                db.Humans.Add(vader);
-                db.Humans.Add(ash);
                 db.Droids.Add(r2d2);
                 db.Droids.Add(c3p0);
 

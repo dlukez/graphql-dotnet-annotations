@@ -17,6 +17,18 @@ namespace GraphQL.Annotations.StarWarsApp.Model
         [GraphQLField]
         public string PrimaryFunction { get; set; }
 
+        public List<DroidAppearance> Appearances { get; set; }
+
+        [GraphQLFunc]
+        public IEnumerable<Episode> AppearsIn(ResolveFieldContext context)
+        {
+            var db = context.GetDataContext();
+            var droid = (Droid)context.Source;
+            return db.DroidAppearances
+                .Where(a => droid.DroidId == a.DroidId)
+                .Select(a => a.Episode);
+        }
+
         [GraphQLFunc]
         public IEnumerable<ICharacter> Friends(ResolveFieldContext context)
         {
