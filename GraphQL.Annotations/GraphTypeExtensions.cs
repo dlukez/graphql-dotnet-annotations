@@ -16,7 +16,8 @@ namespace GraphQL.Annotations
 
             if (metadata == null)
             {
-                var message = string.Format("{0} is not marked as a GraphQL type - did you forget to mark it with a GraphQLTypeAttribute?", type.Name);
+                var message =
+                    $"{type.Name} is not marked as a GraphQL type - did you forget to mark it with a GraphQLTypeAttribute?";
                 throw new NotSupportedException(message);
             }
 
@@ -33,64 +34,76 @@ namespace GraphQL.Annotations
                 if (fieldAttr == null)
                     continue;
 
-                instance.Field(
-                    fieldAttr.ReturnType ?? prop.PropertyType.ToGraphType(),
-                    fieldAttr.Name ?? prop.Name.FirstCharacterToLower(),
-                    fieldAttr.Description,
-                    resolve: context => prop.GetValue(context.Source, null)
-                );
+                try
+                {
+                    instance.Field(
+                        fieldAttr.ReturnType ?? prop.PropertyType.ToGraphType(),
+                        fieldAttr.Name ?? prop.Name.FirstCharacterToLower(),
+                        fieldAttr.Description,
+                        resolve: context => prop.GetValue(context.Source, null));
+                }
+                catch (ArgumentOutOfRangeException exception)
+                {
+                    throw new NotSupportedException(
+                        $"Unable to register field for property {prop.Name}",
+                        exception);
+                }
             }
         }
         
         public static void ApplyMethods<TModelType>(this ComplexGraphType<TModelType> instance, object[] injectedParameters, bool shouldResolve)
         {
             var type = typeof (TModelType);
-
             foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).Where(m => !m.IsSpecialName))
             {
                 var funcAttr = method.GetCustomAttribute<GraphQLFuncAttribute>();
                 if (funcAttr == null)
                     continue;
 
-                var methodDescription = string.Format("`{0}` on type '{1}'", method.Name, type.Name);
+                var methodDescription = $"`{method.Name}` on type '{type.Name}'";
                 var methodParams = method.GetParameters();
                 var parameterArgumentMappings = new Dictionary<ParameterInfo, QueryArgument>();
 
-                // Ensure query parameters are annotated
-                foreach (var param in methodParams.Skip(injectedParameters.Length + 1))
+                try
                 {
-                    var paramAttr = param.GetCustomAttribute<GraphQLArgumentAttribute>();
-                    if (paramAttr == null)
-                        throw new ArgumentException(
-                            string.Format(
-                                "Parameter `{0}` in method {1} is missing a required GraphQLArgumentAttribute",
-                                param.Name, methodDescription));
-
-                    parameterArgumentMappings.Add(param, new QueryArgument(param.ParameterType.ToGraphType())
+                    // Ensure query parameters are annotated
+                    foreach (var param in methodParams.Skip(injectedParameters.Length + 1))
                     {
-                        Name = paramAttr.Name ?? param.Name,
-                        Description = paramAttr.Description
+                        var paramAttr = param.GetCustomAttribute<GraphQLArgumentAttribute>();
+                        if (paramAttr == null)
+                            throw new ArgumentException(
+                                $"Parameter `{param.Name}` in method {methodDescription} is missing a required GraphQLArgumentAttribute");
+
+                        parameterArgumentMappings.Add(param, new QueryArgument(param.ParameterType.ToGraphType())
+                        {
+                            Name = paramAttr.Name ?? param.Name,
+                            Description = paramAttr.Description
+                        });
+                    }
+
+                    // Void methods aren't allowed
+                    if (method.ReturnType == typeof(void))
+                        throw new NotSupportedException(
+                            $"Invalid return type `void` for {methodDescription} - GraphQL methods must return values as they are used as getters.");
+
+                    // Create the field
+                    instance.AddField(new FieldType
+                    {
+                        Type = funcAttr.ReturnType ?? method.ReturnType.ToGraphType(),
+                        Name = funcAttr.Name ?? method.Name.FirstCharacterToLower(),
+                        Description = funcAttr.Description,
+                        Arguments = new QueryArguments(parameterArgumentMappings.Values),
+                        Resolver = shouldResolve
+                            ? new MethodResolver(method, injectedParameters, parameterArgumentMappings)
+                            : null
                     });
                 }
-
-                // Void methods aren't allowed
-                if (method.ReturnType == typeof(void))
-                    throw new NotSupportedException(
-                        string.Format(
-                            "Invalid return type `void` for {0} - GraphQL methods must return values as they are used as getters.",
-                            methodDescription));
-
-                // Create the field
-                instance.AddField(new FieldType
+                catch (ArgumentOutOfRangeException exception)
                 {
-                    Type = funcAttr.ReturnType ?? method.ReturnType.ToGraphType(),
-                    Name = funcAttr.Name ?? method.Name.FirstCharacterToLower(),
-                    Description = funcAttr.Description,
-                    Arguments = new QueryArguments(parameterArgumentMappings.Values),
-                    Resolver = shouldResolve
-                        ? new MethodResolver(method, injectedParameters, parameterArgumentMappings)
-                        : null
-                });
+                    throw new NotSupportedException(
+                        $"Unable to register field for {methodDescription} - unsupported type in method signature",
+                        exception);
+                }
             }
         }
 

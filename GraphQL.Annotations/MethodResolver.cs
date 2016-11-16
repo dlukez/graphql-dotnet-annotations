@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using GraphQL.Resolvers;
 using GraphQL.Types;
 
 namespace GraphQL.Annotations
 {
-    public class MethodResolver : MethodResolver<object>
-    {
-        public MethodResolver(MethodInfo methodInfo, object[] injectedParameters, Dictionary<ParameterInfo, QueryArgument> argumentMap)
-            : base(methodInfo, injectedParameters, argumentMap)
-        {
-        }
-    }
-
-    public class MethodResolver<TReturn> : IFieldResolver<TReturn>
+    public class MethodResolver : IFieldResolver
     {
         private readonly MethodInfo _methodInfo;
         private readonly object[] _injectedParameters;
@@ -28,7 +19,7 @@ namespace GraphQL.Annotations
             _argumentMap = argumentMap;
         }
 
-        private TReturn ResolveInternal(ResolveFieldContext context)
+        private object ResolveInternal(ResolveFieldContext context)
         {
             var arguments = new object[_injectedParameters.Length + _argumentMap.Count + 1];
 
@@ -47,10 +38,10 @@ namespace GraphQL.Annotations
                         param.Key.ParameterType);
             }
 
-            return (TReturn) _methodInfo.Invoke(_methodInfo.IsStatic ? null : context.Source, arguments);
+            return _methodInfo.Invoke(_methodInfo.IsStatic ? null : context.Source, arguments);
         }
 
-        public TReturn Resolve(ResolveFieldContext context)
+        public object Resolve(ResolveFieldContext context)
         {
             return ResolveInternal(context);
         }

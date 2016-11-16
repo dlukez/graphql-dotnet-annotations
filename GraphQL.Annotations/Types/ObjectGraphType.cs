@@ -24,7 +24,7 @@ namespace GraphQL.Annotations.Types
             var interfaces = type.GetInterfaces();
             Interfaces =
                 abstractBaseTypes.Concat(interfaces)
-                    .Select(t => t.GraphTypeFromAttribute<GraphQLInterfaceAttribute>())
+                    .Select(t => t.GetGraphTypeFromAttribute<GraphQLInterfaceAttribute>())
                     .Where(t => t != null);
         }
 

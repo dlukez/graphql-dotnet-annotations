@@ -2,7 +2,7 @@
 
 namespace GraphQL.Annotations.Types
 {
-    public class InputObjectGraphType<TModelType> : ComplexGraphType<TModelType>
+    public class InputObjectGraphType<TModelType> : InputObjectGraphType
     {
         public InputObjectGraphType()
         {

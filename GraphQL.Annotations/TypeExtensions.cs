@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using GraphQL.Annotations.Attributes;
 using GraphQL.Types;
+using Serraview.Common.Entities;
 
 namespace GraphQL.Annotations
 {
@@ -15,27 +16,42 @@ namespace GraphQL.Annotations
         /// </summary>
         public static Type ToGraphType(this Type type)
         {
-            // Already a graph type
-            if (type.IsGraphType())
-                return type;
+            try
+            {
+                // Already a graph type
+                if (type.IsGraphType())
+                    return type;
 
-            // Collection types
-            var enumerableType = type.IsArray ? type.GetElementType() : type.GetEnumerableType();
-            if (enumerableType != null)
-                return typeof(ListGraphType<>).MakeGenericType(enumerableType.ToGraphType());
+                // Unwrap a Task type
+                if (type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(Task<>))
+                    type = type.GetGenericArguments()[0];
 
-            // Nullable primitives
-            var nullableType = Nullable.GetUnderlyingType(type);
-            if (nullableType != null)
-                return type.GraphTypeFromAttribute<GraphQLScalarAttribute>() ?? type.GetGraphTypeFromType(true);
+                // Collection types
+                var enumerableType = type.IsArray ? type.GetElementType() : type.GetEnumerableType();
+                if (enumerableType != null)
+                    return typeof(ListGraphType<>).MakeGenericType(enumerableType.ToGraphType());
 
-            // Get the graph type
-            var graphType = type.GraphTypeFromAttribute() ?? type.GetGraphTypeFromType(true);
-            return type.GetTypeInfo().IsValueType
-                ? typeof(NonNullGraphType<>).MakeGenericType(graphType)
-                : graphType;
+                // Nullable value types
+                var nullableType = Nullable.GetUnderlyingType(type);
+                if (nullableType != null)
+                    return GetGraphTypeInternal(nullableType);
+
+                // Value types (NonNull by default)
+                if (type.GetTypeInfo().IsValueType)
+                    return typeof(NonNullGraphType<>).MakeGenericType(GetGraphTypeInternal(type));
+                
+                // Everything else
+                return GetGraphTypeInternal(type);
+            }
+            catch (ArgumentOutOfRangeException exception)
+            {
+                throw new ArgumentOutOfRangeException($"Unsupported type: {type.Name}", exception);
+            }
         }
-
+        
+        /// <summary>
+        /// Gets the type T for a type implementing IEnumerable&lt;T&gt;.
+        /// </summary>
         public static Type GetEnumerableType(this Type type)
         {
             if (type == typeof(string))
@@ -65,8 +81,9 @@ namespace GraphQL.Annotations
             var typeInfo = type.GetTypeInfo();
             var assembly = typeInfo.Assembly;
             return assembly.GetTypes()
+                // ReSharper disable once PossibleNullReferenceException
                 .Where(t => t.Namespace.Equals(type.Namespace))
-                .Select(GraphTypeFromAttribute)
+                .Select(GetGraphTypeFromAttribute)
                 .Where(t => t != null)
                 .ToList();
         }
@@ -74,18 +91,29 @@ namespace GraphQL.Annotations
         /// <summary>
         /// Resolve the GraphType for a Type annotated with a GraphQLTypeAttribute.
         /// </summary>
-        public static Type GraphTypeFromAttribute(this Type type)
+        public static Type GetGraphTypeFromAttribute(this Type type)
         {
-            return type.GraphTypeFromAttribute<GraphQLTypeAttribute>();
+            return type.GetGraphTypeFromAttribute<GraphQLTypeAttribute>();
         }
 
         /// <summary>
         /// Resolve the GraphType for a Type annotated with a GraphQLTypeAttribute.
         /// </summary>
-        public static Type GraphTypeFromAttribute<TAttribute>(this Type type)
+        public static Type GetGraphTypeFromAttribute<TAttribute>(this Type type)
             where TAttribute : GraphQLTypeAttribute
         {
             return type.GetTypeInfo().GetCustomAttribute<TAttribute>()?.GraphType.MakeGenericType(type);
+        }
+
+        /// <summary>
+        /// Resolve the GraphType for a Type, first looking for any attributes
+        /// then falling back to the default library implementation.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static Type GetGraphTypeInternal(Type type)
+        {
+            return type.GetGraphTypeFromAttribute() ?? type.GetGraphTypeFromType(true);
         }
     }
 }
