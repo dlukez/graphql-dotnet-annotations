@@ -25,7 +25,7 @@ namespace GraphQL.Annotations
             instance.Description = metadata.Description;
         }
 
-        public static void ApplyProperties<TModelType>(this ComplexGraphType<TModelType> instance)
+        public static void ApplyProperties<TModelType>(this IComplexGraphType instance)
         {
             var type = typeof (TModelType);
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance))
@@ -36,11 +36,13 @@ namespace GraphQL.Annotations
 
                 try
                 {
-                    instance.Field(
-                        fieldAttr.ReturnType ?? prop.PropertyType.ToGraphType(),
-                        fieldAttr.Name ?? prop.Name.FirstCharacterToLower(),
-                        fieldAttr.Description,
-                        resolve: context => prop.GetValue(context.Source, null));
+                    instance.AddField(new FieldType
+                    {
+                        Name = fieldAttr.Name ?? prop.Name.FirstCharacterToLower(),
+                        Type = fieldAttr.ReturnType ?? prop.PropertyType.ToGraphType(),
+                        Resolver = new PropertyResolver(prop),
+                        Description = fieldAttr.Description
+                    });
                 }
                 catch (ArgumentOutOfRangeException exception)
                 {
@@ -51,7 +53,7 @@ namespace GraphQL.Annotations
             }
         }
         
-        public static void ApplyMethods<TModelType>(this ComplexGraphType<TModelType> instance, object[] injectedParameters, bool shouldResolve)
+        public static void ApplyMethods<TModelType>(this IComplexGraphType instance, object[] injectedParameters, bool shouldResolve)
         {
             var type = typeof (TModelType);
             foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).Where(m => !m.IsSpecialName))
@@ -74,10 +76,11 @@ namespace GraphQL.Annotations
                             throw new ArgumentException(
                                 $"Parameter `{param.Name}` in method {methodDescription} is missing a required GraphQLArgumentAttribute");
 
-                        parameterArgumentMappings.Add(param, new QueryArgument(param.ParameterType.ToGraphType())
+                        parameterArgumentMappings.Add(param, new QueryArgument(param.ParameterType.ToGraphType(param.HasDefaultValue))
                         {
                             Name = paramAttr.Name ?? param.Name,
-                            Description = paramAttr.Description
+                            Description = paramAttr.Description,
+                            DefaultValue = param.HasDefaultValue ? param.DefaultValue : null
                         });
                     }
 

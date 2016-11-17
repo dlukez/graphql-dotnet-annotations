@@ -7,7 +7,7 @@ namespace GraphQL.Annotations.Types
         public InputObjectGraphType()
         {
             this.ApplyTypeData<TModelType>();
-            this.ApplyProperties();
+            this.ApplyProperties<TModelType>();
         }
 
         public override string ToString()

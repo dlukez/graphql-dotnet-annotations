@@ -33,9 +33,7 @@ namespace GraphQL.Annotations
             foreach (var param in _argumentMap)
             {
                 arguments[param.Key.Position] =
-                    ConvertArgument(
-                        context.GetArgument<object>(param.Value.Name),
-                        param.Key.ParameterType);
+                    ConvertArgument(context.GetArgument<object>(param.Value.Name), param.Key.ParameterType);
             }
 
             return _methodInfo.Invoke(_methodInfo.IsStatic ? null : context.Source, arguments);

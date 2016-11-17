@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using GraphQL.Annotations.Attributes;
 using GraphQL.Types;
-using Serraview.Common.Entities;
 
 namespace GraphQL.Annotations
 {
@@ -14,7 +13,7 @@ namespace GraphQL.Annotations
         /// <summary>
         /// Resolves a Type to its equivalent GraphType.
         /// </summary>
-        public static Type ToGraphType(this Type type)
+        public static Type ToGraphType(this Type type, bool nullableValueTypes = false)
         {
             try
             {
@@ -36,8 +35,8 @@ namespace GraphQL.Annotations
                 if (nullableType != null)
                     return GetGraphTypeInternal(nullableType);
 
-                // Value types (NonNull by default)
-                if (type.GetTypeInfo().IsValueType)
+                // Value types
+                if (type.GetTypeInfo().IsValueType && !nullableValueTypes)
                     return typeof(NonNullGraphType<>).MakeGenericType(GetGraphTypeInternal(type));
                 
                 // Everything else

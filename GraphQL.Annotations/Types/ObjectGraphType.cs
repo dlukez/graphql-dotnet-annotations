@@ -12,8 +12,8 @@ namespace GraphQL.Annotations.Types
         public ObjectGraphType(params object[] injectedParameters)
         {
             this.ApplyTypeData<TModelType>();
-            this.ApplyProperties();
-            this.ApplyMethods(injectedParameters, true);
+            this.ApplyProperties<TModelType>();
+            this.ApplyMethods<TModelType>(injectedParameters, true);
             ImplementInterfaces();
         }
 
@@ -30,11 +30,8 @@ namespace GraphQL.Annotations.Types
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
         {
-            while (type.GetTypeInfo().BaseType != null)
-            {
-                type = type.GetTypeInfo().BaseType;
+            while ((type = type.GetTypeInfo().BaseType) != null)
                 yield return type;
-            }
         }
 
         public override string ToString()
