@@ -9,8 +9,8 @@ namespace GraphQL.Annotations.Types
         {
             var type = typeof (TModelType);
             this.ApplyTypeData<TModelType>();
-            this.ApplyProperties();
-            this.ApplyMethods(injectedParameters, false);
+            this.ApplyProperties<TModelType>();
+            this.ApplyMethods<TModelType>(injectedParameters, false);
             Name = GetInterfaceName(type);
         }
 

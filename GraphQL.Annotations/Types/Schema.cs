@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GraphQL.Types;
 
 namespace GraphQL.Annotations.Types
@@ -10,9 +11,8 @@ namespace GraphQL.Annotations.Types
             ResolveType = t =>
             {
                 var genericType = t.IsConstructedGenericType ? t.GetGenericTypeDefinition() : null;
-                if (genericType != null &&
-                    (genericType == typeof(ObjectGraphType<>) || genericType == typeof(InterfaceGraphType<>)))
-                    return (GraphType) Activator.CreateInstance(t, injectedObjects);
+                if (genericType == typeof(ObjectGraphType<>) || genericType == typeof(InterfaceGraphType<>))
+                        return (GraphType) Activator.CreateInstance(t, injectedObjects);
                 return (GraphType) Activator.CreateInstance(t);
             };
 

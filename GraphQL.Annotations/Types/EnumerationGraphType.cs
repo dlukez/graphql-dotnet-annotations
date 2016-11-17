@@ -52,6 +52,11 @@ namespace GraphQL.Annotations.Types
             return found != null ? found.Value : null;
         }
 
+        public override string ToString()
+        {
+            return Name + " - Enum Type";
+        }
+
         static string PureValue(object value)
         {
             return value.ToString().Replace("\"", "").Replace("'", "").Replace("_", "");
