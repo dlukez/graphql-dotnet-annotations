@@ -7,15 +7,15 @@ Have a look through the sample app and leave some feedback.
 ## Running the sample app
 
 ```
-cd src/GraphQL.Annotations.StarWarsApp/
-dotnet ef migrations add InitialSetup
+cd samples/GraphQL.Annotations.StarWarsApp/
+dotnet build
 dotnet ef database update
 dotnet run
 ```
 
 ## Annotating your models
 
-[Full example](./tree/master/GraphQL.Annotations/)
+[Full example](tree/master/samples/GraphQL.Annotations.StarWarsApp/)
 
 ```csharp
 // Model/QueryRoot.cs

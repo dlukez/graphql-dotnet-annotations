@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using GraphQL.Annotations.Attributes;
+using GraphQL.Annotations.StarWarsApp.Model;
 using GraphQL.Types;
 
-namespace GraphQL.Annotations.StarWarsApp.Model
+namespace GraphQL.Annotations.StarWarsApp
 {
     [GraphQLObject]
     public class QueryRoot : IDisposable

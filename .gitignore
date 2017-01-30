@@ -8,7 +8,6 @@
 
 # Project files
 .vs/
-.vscode/
 project.lock.json
 _ReSharper*/
 *.[Rr]e[Ss]harper

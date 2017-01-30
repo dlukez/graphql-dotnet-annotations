@@ -12,10 +12,8 @@ namespace GraphQL.Annotations.StarWarsApp
         public static void Main(string[] args)
         {
             InitTestData();
-            RunQuery();
             Console.WriteLine();
-            Console.WriteLine("Press any key to exit.");
-            // Console.ReadKey();
+            RunQuery();
             Console.WriteLine();
         }
 

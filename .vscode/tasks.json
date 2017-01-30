@@ -1,0 +1,24 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "command": "dotnet",
+    "isShellCommand": true,
+    "args": [],
+    "tasks": [
+        {
+            "taskName": "build",
+            "args": [ "src/GraphQL.Annotations", "test/GraphQL.Annotations.Tests", "samples/GraphQL.Annotations.StarWarsApp" ],
+            "isBuildCommand": true,
+            "showOutput": "silent",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "test",
+            "args": [ "test/GraphQL.Annotations.Tests" ],
+            "isTestCommand": true,
+            "showOutput": "silent",
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

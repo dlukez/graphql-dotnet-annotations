@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (console)",
+            "preLaunchTask": "build",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceRoot}/GraphQL.Annotations.StarWarsApp/bin/Debug/netcoreapp1.0/GraphQL.Annotations.StarWarsApp.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "stopAtEntry": false,
+            "externalConsole": false
+        }
+    ]
+}

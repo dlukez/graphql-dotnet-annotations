@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using GraphQL.Types;
 
 namespace GraphQL.Annotations.Types
@@ -16,7 +15,7 @@ namespace GraphQL.Annotations.Types
                 return (GraphType) Activator.CreateInstance(t);
             };
 
-            Query = (IObjectGraphType)ResolveType(typeof(ObjectGraphType<TRootQuery>));
+            Query = (IObjectGraphType) ResolveType(typeof(ObjectGraphType<TRootQuery>));
         }
 
         public override string ToString()
