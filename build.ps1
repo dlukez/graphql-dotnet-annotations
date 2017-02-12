@@ -1,19 +1,34 @@
 param (
-  [Parameter(Position = 1)]
-  [string]$PrereleaseTag = $env:PrereleaseTag,
-  [string]$Configuration = "Release"
+    [string]$PrereleaseTag = $env:PrereleaseTag,
+    [string]$Configuration = $env:Configuration
 )
 
+if (-not $PrereleaseTag) {
+    $PrereleaseTag = 'dev'
+}
+
+if (-not $Configuration) {
+    $Configuration = "Release"
+}
+
+$ErrorActionPreference = "Stop";
+
+function Test-ExitCode {
+    if ($LASTEXITCODE -ne 0) {
+        exit 1 
+    }
+}
+
 dotnet restore
-if ($LASTEXITCODE -ne 0) { exit 1 }
+Test-ExitCode
 
 dotnet build src/GraphQL.Annotations/ --configuration $Configuration
-if ($LASTEXITCODE -ne 0) { exit 1 }
+Test-ExitCode
 
 dotnet test test/GraphQL.Annotations.Tests/ --configuration $Configuration
-if ($LASTEXITCODE -ne 0) { exit 1 }
+Test-ExitCode
 
 dotnet pack src/GraphQL.Annotations/ --configuration $Configuration --version-suffix $PrereleaseTag
-if ($LASTEXITCODE -ne 0) { exit 1 }
+Test-ExitCode
 
-exit 0
+exit

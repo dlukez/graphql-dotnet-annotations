@@ -1,12 +1,10 @@
 {
-  "version": "1.0.0",
-
+  "version": "1.0.1",
   "name": "GraphQL.Annotations",
-  "description": "A port of Facebook's DataLoader for .NET",
+  "description": "Attribute-based schema definitions for GraphQL in .NET",
   "authors": [
     "Daniel Zimmermann"
   ],
-  
   "packOptions": {
     "tags": [
       "graphql",
@@ -19,11 +17,9 @@
     "projectUrl": "https://github.com/dlukez/graphql-dotnet-annotations",
     "licenseUrl": "https://github.com/dlukez/graphql-dotnet-annotations/blob/master/LICENSE.md"
   },
-
   "dependencies": {
     "GraphQL": "0.13.0.562"
   },
-
   "frameworks": {
     "netstandard1.3": {
       "dependencies": {
