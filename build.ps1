@@ -1,21 +1,25 @@
 param (
-    [string]$PrereleaseTag = $env:PrereleaseTag,
+    [string]$PrereleaseTag = ${env:GitVersion.PreReleaseTag},
     [string]$Configuration = $env:Configuration
 )
 
 if (-not $PrereleaseTag) {
-    $PrereleaseTag = 'dev'
+    if ($env:PrereleaseTag) {
+        $PrereleaseTag = $env:PrereleaseTag
+    } else {
+        $PrereleaseTag = "dev"
+    }
 }
 
 if (-not $Configuration) {
     $Configuration = "Release"
 }
 
-$ErrorActionPreference = "Stop";
+$ErrorActionPreference = "Stop"
 
 function Test-ExitCode {
     if ($LASTEXITCODE -ne 0) {
-        exit 1 
+        exit 1
     }
 }
 
@@ -28,7 +32,7 @@ Test-ExitCode
 dotnet test test/GraphQL.Annotations.Tests/ --configuration $Configuration
 Test-ExitCode
 
-dotnet pack src/GraphQL.Annotations/ --configuration $Configuration --version-suffix $PrereleaseTag
+dotnet pack src/GraphQL.Annotations/ --configuration $Configuration --no-build --version-suffix $PrereleaseTag
 Test-ExitCode
 
 exit

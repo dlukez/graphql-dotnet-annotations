@@ -1,0 +1,2 @@
+%GitVersion% /output buildserver
+exit
