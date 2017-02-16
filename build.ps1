@@ -1,38 +1,15 @@
-param (
-    [string]$PrereleaseTag = ${env:GitVersion.PreReleaseTag},
-    [string]$Configuration = $env:Configuration
-)
-
-if (-not $PrereleaseTag) {
-    if ($env:PrereleaseTag) {
-        $PrereleaseTag = $env:PrereleaseTag
-    } else {
-        $PrereleaseTag = "dev"
-    }
-}
-
-if (-not $Configuration) {
-    $Configuration = "Release"
-}
-
+# Setup
 $ErrorActionPreference = "Stop"
+if (-not $env:Configuration) { $env:Configuration = "Release" }
+if (-not $env:PackageVersion) { $env:PackageVersion = (gitversion | ConvertFrom-Json).NuGetVersionV2 }
+if ($env:BuildRunner) { & ./tools/dotnet-install.ps1 -Version 1.0.0-rc4-004771 -Architecture x86 }
+function Invoke-BuildStep { param([scriptblock]$cmd) & $cmd; if ($LASTEXITCODE -ne 0) { exit 1 } }
 
-function Test-ExitCode {
-    if ($LASTEXITCODE -ne 0) {
-        exit 1
-    }
-}
+# Build
+Set-Location src/GraphQL.Annotations
+Invoke-BuildStep { dotnet restore }
+Invoke-BuildStep { dotnet build }
+Invoke-BuildStep { dotnet pack --include-symbols --no-build  }
 
-dotnet restore
-Test-ExitCode
-
-dotnet build src/GraphQL.Annotations/ --configuration $Configuration
-Test-ExitCode
-
-dotnet test test/GraphQL.Annotations.Tests/ --configuration $Configuration
-Test-ExitCode
-
-dotnet pack src/GraphQL.Annotations/ --configuration $Configuration --no-build --version-suffix $PrereleaseTag
-Test-ExitCode
-
+# End
 exit

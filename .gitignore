@@ -12,5 +12,8 @@ project.lock.json
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
-.idea/
 *.sln.iml
+.idea/
+
+# Miscellaneous
+.DS_STORE

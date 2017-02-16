@@ -1,5 +1,9 @@
 # GraphQL.Annotations
 
+[![NuGet](https://img.shields.io/nuget/v/DataLoader.svg)](https://nuget.org/packages/GraphQL.Annotations)
+[![MyGet Pre Release](https://img.shields.io/myget/dlukez/vpre/GraphQL.Annotations.svg?label=myget)](https://www.myget.org/feed/dlukez/package/nuget/GraphQL.Annotations)
+[![MyGet Build Status](https://www.myget.org/BuildSource/Badge/dlukez?identifier=265cd302-0184-43af-abc8-6041143cfc91)](https://www.myget.org/feed/dlukez/package/nuget/GraphQL.Annotations)
+
 Attribute-based schema definitions for [GraphQL](https://github.com/graphql-dotnet/graphql-dotnet) in .NET.
 
 Have a look through the sample app and leave some feedback.

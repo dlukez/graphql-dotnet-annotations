@@ -1,0 +1,17 @@
+﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>GraphQL.Annotations</PackageId>
+    <Description>Attribute-based schema definitions for GraphQL in .NET</Description>
+    <Authors>Daniel Zimmermann</Authors>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <PackageTags>graphql;conventions;annotations;attributes;schema;generation</PackageTags>
+    <PackageProjectUrl>https://github.com/dlukez/graphql-dotnet-annotations</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/dlukez/graphql-dotnet-annotations/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageTargetFallback>$(PackageTargetFallback);dotnet</PackageTargetFallback>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="GraphQL" Version="0.14.6.657" />
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.0.0" />
+  </ItemGroup>
+</Project>

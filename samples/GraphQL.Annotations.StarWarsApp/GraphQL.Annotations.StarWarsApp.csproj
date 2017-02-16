@@ -1,0 +1,25 @@
+﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>GraphQL.Annotations.StarWars</AssemblyName>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <DebugType>portable</DebugType>
+    <PackageTargetFallback>$(PackageTargetFallback);dotnet</PackageTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/GraphQL.Annotations/GraphQL.Annotations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<PackageReference Include="GraphQL" Version="0.14.6.657" />-->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0-msbuild3-final" />
+  </ItemGroup>
+
+</Project>
