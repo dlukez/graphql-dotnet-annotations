@@ -3,7 +3,7 @@
     <PackageId>GraphQL.Annotations</PackageId>
     <Description>Attribute-based schema definitions for GraphQL in .NET</Description>
     <Authors>Daniel Zimmermann</Authors>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netstandard1.1</TargetFramework>
     <PackageTags>graphql;conventions;annotations;attributes;schema;generation</PackageTags>
     <PackageProjectUrl>https://github.com/dlukez/graphql-dotnet-annotations</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/dlukez/graphql-dotnet-annotations/blob/master/LICENSE.md</PackageLicenseUrl>
