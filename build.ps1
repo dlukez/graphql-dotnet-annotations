@@ -7,9 +7,10 @@ if (-not $env:PackageVersion) { $env:PackageVersion = (gitversion | ConvertFrom-
 function Invoke-BuildStep { param([scriptblock]$cmd) & $cmd; if ($LASTEXITCODE -ne 0) { exit 1 } }
 
 # Build
-Set-Location src/GraphQL.Annotations
+Push-Location src/GraphQL.Annotations
 Invoke-BuildStep { dotnet restore }
 Invoke-BuildStep { dotnet pack --include-symbols }
+Pop-Location
 
 # End
 exit
