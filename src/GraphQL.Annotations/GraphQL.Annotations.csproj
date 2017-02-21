@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;net45</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.1</TargetFrameworks>
     <PackageId>GraphQL.Annotations</PackageId>
     <Description>Attribute-based schema definitions for GraphQL in .NET</Description>
     <Authors>Daniel Zimmermann</Authors>
     <PackageTags>graphql conventions annotations attributes schema generation</PackageTags>
     <PackageProjectUrl>https://github.com/dlukez/graphql-dotnet-annotations</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/dlukez/graphql-dotnet-annotations/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet;portable-net45</PackageTargetFallback>
+    <PackageTargetFallback>$(PackageTargetFallback);dotnet</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GraphQL" Version="0.14.6.657" />

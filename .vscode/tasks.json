@@ -8,7 +8,7 @@
     "tasks": [
         {
             "taskName": "build",
-            "args": [ "src/GraphQL.Annotations", "test/GraphQL.Annotations.Tests", "samples/GraphQL.Annotations.StarWarsApp" ],
+            "args": [ "GraphQL.Annotations.sln" ],
             "isBuildCommand": true,
             "showOutput": "silent",
             "problemMatcher": "$msCompile"

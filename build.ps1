@@ -7,10 +7,9 @@ if (-not $env:BuildRunner) { $env:PackageVersion = (gitversion | ConvertFrom-Jso
 function Invoke-BuildStep { param([scriptblock]$cmd) & $cmd; if ($LASTEXITCODE -ne 0) { exit 1 } }
 
 # Build
-Push-Location src/GraphQL.Annotations
 Invoke-BuildStep { dotnet restore }
-Invoke-BuildStep { dotnet pack --include-symbols }
-Pop-Location
+Invoke-BuildStep { dotnet pack src/GraphQL.Annotations/GraphQL.Annotations.csproj --include-symbols }
+Invoke-BuildStep { dotnet test test/GraphQL.Annotations.Tests/GraphQL.Annotations.Tests.csproj }
 
 # End
 exit

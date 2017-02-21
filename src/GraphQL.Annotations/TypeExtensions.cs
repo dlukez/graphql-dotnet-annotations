@@ -112,6 +112,10 @@ namespace GraphQL.Annotations
         /// <returns></returns>
         private static Type GetGraphTypeInternal(Type type)
         {
+            // Support enum types
+            if (type.GetTypeInfo().IsEnum)
+                return typeof(EnumerationGraphType<>).MakeGenericType(type);
+
             return type.GetGraphTypeFromAttribute() ?? type.GetGraphTypeFromType(true);
         }
     }

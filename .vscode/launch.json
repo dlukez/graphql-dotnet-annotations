@@ -8,7 +8,7 @@
             "request": "launch",
             "program": "${workspaceRoot}/samples/GraphQL.Annotations.StarWarsApp/bin/Debug/netcoreapp1.0/GraphQL.Annotations.StarWarsApp.dll",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/samples/GraphQL.Annotations.StarWarsApp/bin/Debug/netcoreapp1.0/",
             "stopAtEntry": false,
             "externalConsole": false
         }
