@@ -26,7 +26,7 @@ namespace GraphQL.Annotations.StarWarsApp
 
     public static class ContextExtensions
     {
-        public static StarWarsContext GetDataContext(this ResolveFieldContext context)
+        public static StarWarsContext GetDataContext(this IResolveFieldContext context)
         {
             return context.RootValue as StarWarsContext ?? (context.RootValue as QueryRoot)?.Db;
         }

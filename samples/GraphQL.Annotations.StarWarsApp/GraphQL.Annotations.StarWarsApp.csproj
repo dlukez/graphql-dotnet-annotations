@@ -2,10 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>GraphQL.Annotations.StarWarsApp</AssemblyName>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <DebugType>portable</DebugType>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,13 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="GraphQL" Version="0.14.6.657" />-->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.0.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0-msbuild3-final" />
+    <PackageReference Include="GraphQL.SystemTextJson" Version="4.6.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

@@ -11,6 +11,6 @@ namespace GraphQL.Annotations.StarWarsApp.Model
         string Name { get; set; }
 
         [GraphQLFunc]
-        IEnumerable<ICharacter> Friends(ResolveFieldContext context);
+        IEnumerable<ICharacter> Friends(IResolveFieldContext context);
     }
 }

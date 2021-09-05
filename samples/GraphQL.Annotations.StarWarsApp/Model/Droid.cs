@@ -20,7 +20,7 @@ namespace GraphQL.Annotations.StarWarsApp.Model
         public List<DroidAppearance> Appearances { get; set; }
 
         [GraphQLFunc]
-        public IEnumerable<Episode> AppearsIn(ResolveFieldContext context)
+        public IEnumerable<Episode> AppearsIn(IResolveFieldContext context)
         {
             var db = context.GetDataContext();
             var droid = (Droid)context.Source;
@@ -30,7 +30,7 @@ namespace GraphQL.Annotations.StarWarsApp.Model
         }
 
         [GraphQLFunc]
-        public IEnumerable<ICharacter> Friends(ResolveFieldContext context)
+        public IEnumerable<ICharacter> Friends(IResolveFieldContext context)
         {
             var db = context.GetDataContext();
             return db.Friendships

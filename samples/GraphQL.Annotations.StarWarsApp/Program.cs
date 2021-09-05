@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GraphQL.Annotations.StarWarsApp.Model;
 using GraphQL.Annotations.Types;
-using GraphQL.Http;
+using GraphQL.SystemTextJson;
 
 namespace GraphQL.Annotations.StarWarsApp
 {
@@ -17,7 +17,7 @@ namespace GraphQL.Annotations.StarWarsApp
             Console.WriteLine();
         }
 
-        private static void RunQuery()
+        private static async void RunQuery()
         {
             var query = @" {
                 droids {
@@ -43,22 +43,34 @@ namespace GraphQL.Annotations.StarWarsApp
             using (var root = new QueryRoot())
             using (var schema = new Schema<QueryRoot>())
             {
-                var result = executer.ExecuteAsync(schema, root, query, null).Result;
-                output1 = writer.Write(result);
+                var result = executer.ExecuteAsync(new ExecutionOptions()
+                {
+                    Schema = schema,
+                    Root = root,
+                    Query = query
+                });
+
+                output1 = await writer.WriteToStringAsync(result.Result);
                 Console.WriteLine("Example 1 output (QueryRoot):");
                 Console.WriteLine("-----------------------------");
                 Console.WriteLine(output1);
                 Console.WriteLine();
             }
-
+            
             // Example 2 - DbContext.
             // I get the feeling there are reasons why wouldn't
             // want to do this but for simple scenarios it seems to suffice.
-            using (var db = new StarWarsContext())
+            await using (var db = new StarWarsContext())
             using (var schema = new Schema<StarWarsContext>())
             {
-                var result = executer.ExecuteAsync(schema, db, query, null).Result;
-                output2 = writer.Write(result);
+                var result = executer.ExecuteAsync(new ExecutionOptions()
+                {
+                    Schema = schema,
+                    Root = db,
+                    Query = query
+                });
+
+                output2 = await writer.WriteToStringAsync(result.Result);
                 Console.WriteLine("Example 2 output (StarWarsContext):");
                 Console.WriteLine("-----------------------------------");
                 Console.WriteLine(output2);

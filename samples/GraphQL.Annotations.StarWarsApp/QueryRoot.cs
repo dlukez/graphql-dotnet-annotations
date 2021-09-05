@@ -10,17 +10,17 @@ namespace GraphQL.Annotations.StarWarsApp
     [GraphQLObject]
     public class QueryRoot : IDisposable
     {
-        public StarWarsContext Db = new StarWarsContext();
+        public StarWarsContext Db { get; } = new StarWarsContext();
 
         [GraphQLFunc]
-        public IEnumerable<Droid> Droids(ResolveFieldContext context)
+        public IEnumerable<Droid> Droids(IResolveFieldContext context)
         {
             var db = context.GetDataContext();
             return db.Droids.ToList();
         }
 
         [GraphQLFunc]
-        public IEnumerable<Human> Humans(ResolveFieldContext context)
+        public IEnumerable<Human> Humans(IResolveFieldContext context)
         {
             var db = context.GetDataContext();
             return db.Humans.ToList();

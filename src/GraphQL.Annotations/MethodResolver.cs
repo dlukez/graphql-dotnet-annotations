@@ -36,14 +36,14 @@ namespace GraphQL.Annotations
             _queryParametersStartPosition = 0;
 
             // Validate signature:
-            //     object SomeMethod([ResolveFieldContext], [dependencies...], [queryParameters...])
+            //     object SomeMethod([IResolveFieldContext], [dependencies...], [queryParameters...])
 
             // Return type
             if (methodInfo.ReturnType == typeof(void))
                 throw new ArgumentException("Method has no return value");
 
             // ResolveFieldContext
-            if (methodInfo.GetParameters().FirstOrDefault()?.ParameterType == typeof(ResolveFieldContext))
+            if (methodInfo.GetParameters().FirstOrDefault()?.ParameterType == typeof(IResolveFieldContext))
             {
                 _passContext = true;
                 _queryParametersStartPosition = 1;
@@ -65,12 +65,12 @@ namespace GraphQL.Annotations
             }
         }
 
-        private object ResolveInternal(ResolveFieldContext context)
+        private object ResolveInternal(IResolveFieldContext context)
         {
             // Prepopulated with dependencies
             var arguments = (object[])_argumentsTemplate.Clone();
 
-            // Set ResolveFieldContext
+            // Set IResolveFieldContext
             if (_passContext) arguments[0] = context;
 
             // Fill in parameters
@@ -80,12 +80,12 @@ namespace GraphQL.Annotations
             return _methodInfo.Invoke(_methodInfo.IsStatic ? null : context.Source, arguments);
         }
 
-        public object Resolve(ResolveFieldContext context)
+        public object Resolve(IResolveFieldContext context)
         {
             return ResolveInternal(context);
         }
 
-        object IFieldResolver.Resolve(ResolveFieldContext context)
+        object IFieldResolver.Resolve(IResolveFieldContext context)
         {
             return ResolveInternal(context);
         }

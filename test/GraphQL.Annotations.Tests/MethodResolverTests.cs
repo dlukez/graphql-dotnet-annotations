@@ -37,7 +37,7 @@ namespace GraphQL.Annotations.Tests
             var context = new ResolveFieldContext
             {
                 Source = counter,
-                Arguments = new Dictionary<string, object> { { "parity", Parity.Even } }
+                Arguments = new Dictionary<string, Execution.ArgumentValue> { { "parity", new Execution.ArgumentValue(Parity.Even, Execution.ArgumentSource.Literal) } }
             };
 
             // Act

@@ -71,7 +71,7 @@ namespace GraphQL.Annotations
                     var injectedCount = injectedDependencies.Length;
 
                     // Optional ResolveFieldContext
-                    if (methodParams.FirstOrDefault().ParameterType == typeof(ResolveFieldContext))
+                    if (methodParams.FirstOrDefault()?.ParameterType == typeof(IResolveFieldContext))
                         injectedCount++;
 
                     // Ensure query parameters are annotated

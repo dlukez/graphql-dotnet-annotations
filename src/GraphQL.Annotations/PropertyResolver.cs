@@ -13,7 +13,7 @@ namespace GraphQL.Annotations
             _prop = prop;
         }
 
-        public object Resolve(ResolveFieldContext context)
+        public object Resolve(IResolveFieldContext context)
         {
             return _prop.GetValue(context.Source, null);
         }

@@ -22,10 +22,12 @@ namespace GraphQL.Annotations.Types
             var type = typeof (TModelType);
             var abstractBaseTypes = GetBaseTypes(type).Where(t => t.GetTypeInfo().IsAbstract);
             var interfaces = type.GetInterfaces();
-            Interfaces =
-                abstractBaseTypes.Concat(interfaces)
+            foreach (var item in abstractBaseTypes.Concat(interfaces)
                     .Select(t => t.GetGraphTypeFromAttribute<GraphQLInterfaceAttribute>())
-                    .Where(t => t != null);
+                    .Where(t => t != null))
+            {
+                Interfaces.Add(item);
+            }
         }
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
